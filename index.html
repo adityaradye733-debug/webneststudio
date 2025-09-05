@@ -605,23 +605,38 @@
         tick();
     }
     
-    // --- Demo Contact Form Handler ---
-    const form = document.getElementById('contactForm');
-    const formMsg = document.getElementById('formMsg');
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const data = Object.fromEntries(new FormData(form));
-      if (!data.name || !data.email || !data.message) {
-        formMsg.textContent = 'Please fill all required fields.';
+   // --- Updated Contact Form Handler with AJAX ---
+const form = document.getElementById('contactForm');
+const formMsg = document.getElementById('formMsg');
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  formMsg.classList.add('hidden');
+  const data = new FormData(form);
+  formMsg.textContent = 'Sending...';
+  formMsg.style.color = '#60a5fa'; // Accent blue
+  formMsg.classList.remove('hidden');
+  fetch('sendmail.php', {
+    method: 'POST',
+    body: data
+  })
+    .then(res => res.json())
+    .then(out => {
+      if (out.status === 'success') {
+        formMsg.textContent = out.message;
+        formMsg.style.color = '#34d399'; // Emerald
+        form.reset();
+      } else {
+        formMsg.textContent = out.message || 'Failed to send.';
         formMsg.style.color = '#f87171'; // Red
-        formMsg.classList.remove('hidden');
-        return;
       }
-      formMsg.textContent = 'Thanks! Your message has been queued. I will reply shortly.';
-      formMsg.style.color = '#34d399'; // Emerald
-      formMsg.classList.remove('hidden');
-      form.reset();
+    })
+    .catch(() => {
+      formMsg.textContent = 'Network error. Try again later.';
+      formMsg.style.color = '#f87171'; // Red
     });
+});
+
   </script>
 </body>
+
 </html>
