@@ -518,7 +518,9 @@
       </div>
       <div class="mt-10 grid md:grid-cols-3 gap-6">
         <div class="md:col-span-2 glass rounded-2xl p-6 border border-base-700/60" data-aos="fade-right">
-          <form id="contactForm" class="grid sm:grid-cols-2 gap-4">
+          <form id="contactForm" class="grid sm:grid-cols-2 gap-4" action="https://formsubmit.co/adityaradye733@gmail.com" method="POST">
+  <input type="hidden" name="_captcha" value="false">
+
             <div>
               <label class="text-sm text-slate-400">Name</label>
               <input name="name" required class="mt-1 w-full rounded-xl bg-base-800 border border-base-700 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent-600" placeholder="Your name" />
@@ -605,36 +607,7 @@
         tick();
     }
     
-   // --- Updated Contact Form Handler with AJAX ---
-const form = document.getElementById('contactForm');
-const formMsg = document.getElementById('formMsg');
-form.addEventListener('submit', (e) => {
-  e.preventDefault();
-  formMsg.classList.add('hidden');
-  const data = new FormData(form);
-  formMsg.textContent = 'Sending...';
-  formMsg.style.color = '#60a5fa'; // Accent blue
-  formMsg.classList.remove('hidden');
-  fetch('sendmail.php', {
-    method: 'POST',
-    body: data
-  })
-    .then(res => res.json())
-    .then(out => {
-      if (out.status === 'success') {
-        formMsg.textContent = out.message;
-        formMsg.style.color = '#34d399'; // Emerald
-        form.reset();
-      } else {
-        formMsg.textContent = out.message || 'Failed to send.';
-        formMsg.style.color = '#f87171'; // Red
-      }
-    })
-    .catch(() => {
-      formMsg.textContent = 'Network error. Try again later.';
-      formMsg.style.color = '#f87171'; // Red
-    });
-});
+   
 
   </script>
 </body>
