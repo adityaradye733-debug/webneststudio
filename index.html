@@ -532,8 +532,8 @@
             </div>
             <div>
               <label class="text-sm text-slate-400">Phone Number</label>
-              <input type="tel" name="number" required class="mt-1 w-full rounded-xl bg-base-800 border border-base-700 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent-600" placeholder="91xxxxxxxx" />
-            </div>
+              <input id="phone" type="tel" name="number" required class="mt-1 w-full rounded-xl bg-base-800 border border-base-700 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent-600" placeholder="Phone number" />
+              </div>
             <div class="sm:col-span-2">
               <label class="text-sm text-slate-400">Project Type</label>
               <select name="type" class="mt-1 w-full rounded-xl bg-base-800 border border-base-700 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent-600">
@@ -618,8 +618,40 @@
 
   </script>
 </body>
+<!-- intl-tel-input CSS and JS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/23.0.10/css/intlTelInput.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/23.0.10/js/intlTelInput.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/23.0.10/js/utils.min.js"></script>
+
+<script>
+  // Initialize the intl-tel-input plugin on the phone field
+  const phoneInput = document.querySelector("#phone");
+  const iti = window.intlTelInput(phoneInput, {
+    initialCountry: "auto",
+    nationalMode: false,
+    geoIpLookup: function(success) {
+      fetch("https://ipapi.co/json").then(response => response.json()).then(data => {
+        success(data.country_code);
+      });
+    },
+    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/23.0.10/js/utils.min.js"
+  });
+
+  // Replace the default form validation with intl-tel-input's validation
+  document.getElementById('contactForm').addEventListener('submit', function(e) {
+    if (!iti.isValidNumber()) {
+      e.preventDefault();
+      alert("Please enter a valid phone number with the correct country code.");
+      phoneInput.focus();
+      return false;
+    }
+    // Update input with full intl number before submit
+    phoneInput.value = iti.getNumber();
+  });
+</script>
 
 </html>
+
 
 
 
